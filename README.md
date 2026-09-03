@@ -13,6 +13,7 @@ required tooling to comfortably develop and deploy said patches are provided her
 - **PanzerPaladinPatches**: Fixes breakage when running non-Steam, newer FNA builds and does general optimizations.
 - **BleedPatches**: Fixes startup failures on certain FNA+SDL2 combinations.
 - **BlossomTalesPatches**: Removes fixed per-frame render overhead on Blossom Tales: The Sleeping King -- oversized render targets, a redundant render target round-trip, and unbatched sprite draws. Measured 15-20fps to 60fps on an aarch64 handheld. Also builds a managed `SlimDX.DirectInput` stub, as the real one is C++/CLI and cannot load under Mono.
+- **BlossomTales2Patches**: The same treatment for Blossom Tales II: The Minotaur Prince, which shares the first game's engine and its fixed per-frame overhead (five oversized render targets there rather than four). Applies to both the Linux and Windows builds from one binary.
 - **EVBUnpack**: Extracts the virtual filesystem from games shipped as a single Enigma Virtual Box bundle, so a port can unpack on-device from its patchscript instead of asking players to do it on a PC first.
 - **TMNTSR-Mods**: Load custom sound assets on TMNT: Shredder's Revenge.
 - **TMNTSRPatches**: Provides Performance settings, fixes Deadlocks on OpenGL, fixes file paths on Linux and more. 
