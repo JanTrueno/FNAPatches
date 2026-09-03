@@ -8,7 +8,7 @@ HOOK_GEN ?= MonoMod.RuntimeDetour.HookGen.exe
 
 -include $(MAKECMDGOALS)/Makefile.inc
 
-.PHONY: out/$(MAKECMDGOALS) MMLoader clean
+.PHONY: out/$(MAKECMDGOALS) MMLoader EVBUnpack clean
 
 all:
 clean:
@@ -31,3 +31,7 @@ out/$(MAKECMDGOALS)/%.dll: $(MAKECMDGOALS)/%.cs
 MMLoader: out/MMLoader out/MMLoader/MMLoader.exe
 out/MMLoader/MMLoader.exe: MMLoader.cs
 	@MONO_PATH=$(MONO_PATH) $(MCS) -optimize MMLoader.cs /out:out/MMLoader/MMLoader.exe
+
+EVBUnpack: out/EVBUnpack out/EVBUnpack/EVBUnpack.exe
+out/EVBUnpack/EVBUnpack.exe: EVBUnpack.cs
+	@MONO_PATH=$(MONO_PATH) $(MCS) -optimize EVBUnpack.cs /out:out/EVBUnpack/EVBUnpack.exe
