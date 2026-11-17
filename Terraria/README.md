@@ -2,7 +2,7 @@
 
 MonoMod patches for Terraria 1.4.5.8 (GOG Linux), for the PortMaster port on 1 GB ARM handhelds. The game runs on .NET 10 with our SDL2 builds of FNA, FNA3D and FAudio (their `terraria` branches). The port itself lives in the `jantrueno` branch of wild1walker's portmaster-terraria.
 
-Most of the memory and speed work follows wild1walker's port (MIT), redone here as MonoMod patches. Each file says at the top what it takes from it.
+The lazy textures and fonts and the trpatch speed passes follow wild1walker's port (MIT), redone here as MonoMod patches. Each file says at the top what it takes from it.
 
 ## The patches
 
