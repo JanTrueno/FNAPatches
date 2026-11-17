@@ -18,6 +18,8 @@ The lazy textures and fonts and the trpatch speed passes follow wild1walker's po
   - splitting the huge routines;
   - no zeroed locals.
 
+`TrSetup/` builds `trsetup.exe`, which the handheld runs during setup. It covers three steps from wild1walker's trpatch: it pulls out the libraries Terraria.exe carries, makes stand-ins for the Windows types .NET lacks, and writes the texture-size table and the uncompressed fonts.
+
 `TileConverter/` holds the Cecil passes the patches' rules run, and `Passes.cs` runs them in a fixed order. They take effect when the game is patched. At that point `TERRARIA_SPEED=0` leaves out all the speed passes, and `TERRARIA_DRAWCUTS`, `TERRARIA_SCANS`, `TERRARIA_SPLIT` or `TERRARIA_INITS` set to `0` leave out one of them.
 
 ## Building
@@ -27,6 +29,6 @@ make Terraria
 Terraria/make-port.sh
 ```
 
-`make-port.sh` copies the build, MonoMod, FNA, FNA3D, FAudio and gpuastc into the port folder. With `PACK=1` it also writes `terraria.zip`. The script lists what it needs at the top.
+`make-port.sh` copies the build, MonoMod and Cecil, FNA, FNA3D, FAudio and gpuastc into the port folder. With `PACK=1` it also writes `terraria.zip`. The script lists what it needs at the top.
 
 To try the game on a PC: `test-net.sh` builds and runs it under .NET the way the handheld does, and `test-pc.sh` runs it under Mono.

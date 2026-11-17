@@ -8,7 +8,7 @@
 SRC := $(wildcard $(MAKECMDGOALS)/*.mm.cs)
 # TileConverter.dll runs inside MonoMod (from the rules in Terraria.TileRecords.mm.cs), so it is built first and is a dependency
 # of every patch assembly
-ASM := out/Terraria/TileConverter.dll $(SRC:%.cs=out/%.dll)
+ASM := out/Terraria/TileConverter.dll $(SRC:%.cs=out/%.dll) out/Terraria/trsetup.exe
 DEPS_FOLDER ?= deps/$(MAKECMDGOALS)
 DEPS := $(DEPS_FOLDER)/Terraria.exe \
         $(DEPS_FOLDER)/ReLogic.dll \
@@ -20,3 +20,8 @@ DEPS := $(DEPS_FOLDER)/Terraria.exe \
 out/Terraria/TileConverter.dll: $(wildcard Terraria/TileConverter/*.cs)
 	@mkdir -p out/Terraria
 	@MONO_PATH=$(MONO_PATH) $(MONO) $(COMPILER) $@ $^ -- deps/Cecil/*.dll $(COMMON_DEPS)
+
+# trsetup.exe: the setup's extract, stubs and content steps (from wild1walker's trpatch), run on the handheld under .NET
+out/Terraria/trsetup.exe: $(wildcard Terraria/TrSetup/*.cs)
+	@mkdir -p out/Terraria
+	@MONO_PATH=$(MONO_PATH) $(MONO) $(COMPILER) $@ $^ -- deps/Cecil/Mono.Cecil.dll $(COMMON_DEPS)

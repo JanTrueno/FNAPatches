@@ -1,9 +1,8 @@
 #!/bin/bash
 # Fills the Terraria port repo (Terraria-PortMaster: Terraria.sh + terraria/, laid out as PortMaster ships it) with what is built
 # here and elsewhere: our patches and the rules' helper, MonoMod, the reference assemblies the weave resolves against, our FNA /
-# FNA3D / FAudio, gpuastc, trpatch. The scripts, settings and texts in the repo are edited there; this only refreshes binaries.
+# FNA3D / FAudio, gpuastc, trsetup. The scripts, settings and texts in the repo are edited there; this only refreshes binaries.
 #   PORT         the port repo  (default ../Terraria-PortMaster next to FNAPatches)
-#   UPSTREAM_ZIP upstream terraria.zip, only for trpatch, its Cecil and licenses (wild1walker, MIT)  (default ~/Downloads/terraria.zip)
 #   REFDIR       Mono 4.5 reference assemblies  (default /usr/lib/mono/4.5)
 #   GPUASTC      GPU-ASTC checkout with the aarch64 gpuastc in build-aarch64/  (default ../GPU-ASTC)
 #   PACK=1       also writes terraria.zip next to the repo
@@ -11,12 +10,12 @@
 set -euo pipefail
 FP=$(cd "$(dirname "$0")/.." && pwd); OURS=$FP/deps/Terraria
 PORT=$(cd "${PORT:-$FP/../Terraria-PortMaster}" && pwd); T=$PORT/terraria
-UP=${UPSTREAM_ZIP:-$HOME/Downloads/terraria.zip}; REFDIR=${REFDIR:-/usr/lib/mono/4.5}; GA=${GPUASTC:-$FP/../GPU-ASTC}
+REFDIR=${REFDIR:-/usr/lib/mono/4.5}; GA=${GPUASTC:-$FP/../GPU-ASTC}
 for f in "$OURS/FNA.dll" "$OURS/FNA.dll.config" "$OURS/arm64-sdl2-libs/libFNA3D.so.0.26.11" "$OURS/arm64-sdl2-libs/libFAudio.so.0.26.11" \
-         "$FP/out/Terraria/Terraria.TerrariaPatches.mm.dll" "$FP/out/Terraria/TileConverter.dll" "$GA/build-aarch64/gpuastc" "$UP" "$PORT/Terraria.sh"; do
+         "$FP/out/Terraria/Terraria.TerrariaPatches.mm.dll" "$FP/out/Terraria/TileConverter.dll" "$GA/build-aarch64/gpuastc" "$FP/out/Terraria/trsetup.exe" "$PORT/Terraria.sh"; do
   [ -f "$f" ] || { echo "missing $f"; exit 1; }
 done
-rm -rf "$T/monomod" "$T/patches" "$T/libs" "$T/dlls"
+rm -rf "$T/monomod" "$T/patches" "$T/libs" "$T/dlls" "$T/tools/trpatch.exe"
 mkdir -p "$T/monomod/ref" "$T/patches" "$T/libs" "$T/dlls" "$T/tools" "$T/licenses"
 # our patches and the helper their rules run
 cp "$FP"/out/Terraria/{Terraria,ReLogic}.{TerrariaPatches,TileRecords,NetAccess,Lazy,Fonts,Pack,Speed}.mm.dll "$T/patches/" 2>/dev/null || true
@@ -28,12 +27,11 @@ for a in mscorlib System System.Core System.Xml System.Drawing System.Windows.Fo
          Accessibility Microsoft.CSharp Mono.Posix Mono.Security Mono.WebBrowser; do
   cp "$REFDIR/$a.dll" "$T/monomod/ref/"
 done
-# trpatch (stubs, extract, content) and its Cecil, which MonoMod 22.05 runs on too; licenses (wild1walker, MIT)
-W=$(mktemp -d); trap 'rm -rf "$W"' EXIT
-unzip -q -o "$UP" 'terraria/bin/trpatch/*' 'terraria/licenses/*' -d "$W"
-cp "$W/terraria/bin/trpatch/trpatch.exe" "$T/tools/"
-cp "$W/terraria/bin/trpatch/"{Mono.Cecil.dll,Mono.Cecil.Mdb.dll,Mono.Cecil.Pdb.dll,Mono.Cecil.Rocks.dll} "$T/monomod/"
-cp "$W"/terraria/licenses/* "$T/licenses/"
+# trsetup (extract, stubs, content) and the Cecil it and MonoMod run on; licenses
+cp "$FP/out/Terraria/trsetup.exe" "$T/tools/"
+cp "$FP"/deps/Cecil/{Mono.Cecil.dll,Mono.Cecil.Mdb.dll,Mono.Cecil.Pdb.dll,Mono.Cecil.Rocks.dll} "$T/monomod/"
+cp "$FP"/Terraria/licenses/* "$T/licenses/"
+cp "$FP/../FNA3D/LICENSE" "$T/licenses/LICENSE.FNA3D.txt"; cp "$FP/../FAudio/LICENSE" "$T/licenses/LICENSE.FAudio.txt"
 # our native libraries and FNA, gpuastc
 # plain files (no symlinks: exFAT cards), named as .NET looks for them: FNA's DllImport "FNA3D" -> libFNA3D.so
 for l in FNA3D FAudio; do cp "$OURS/arm64-sdl2-libs/lib$l.so.0.26.11" "$T/libs/lib$l.so"; done
