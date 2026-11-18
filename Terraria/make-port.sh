@@ -18,7 +18,8 @@ done
 rm -rf "$T/monomod" "$T/patches" "$T/libs" "$T/dlls" "$T/tools/trpatch.exe"
 mkdir -p "$T/monomod/ref" "$T/patches" "$T/libs" "$T/dlls" "$T/tools" "$T/licenses"
 # our patches and the helper their rules run
-cp "$FP"/out/Terraria/{Terraria,ReLogic}.{TerrariaPatches,TileRecords,NetAccess,Lazy,Fonts,Pack,Speed}.mm.dll "$T/patches/" 2>/dev/null || true
+# (every patch assembly the build made: a new Terraria/*.mm.cs needs no line here)
+cp "$FP"/out/Terraria/*.mm.dll "$T/patches/"
 rm -f "$T"/patches/ReLogic.TileRecords.mm.dll
 cp "$FP"/deps/MonoMod/{MonoMod.Common,MonoMod.Utils}.dll "$FP/deps/MonoMod/MonoMod.exe" "$FP/out/Terraria/TileConverter.dll" "$T/monomod/"
 for a in mscorlib System System.Core System.Xml System.Drawing System.Windows.Forms System.Runtime.Serialization WindowsBase \

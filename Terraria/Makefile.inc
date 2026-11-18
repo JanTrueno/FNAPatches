@@ -25,3 +25,9 @@ out/Terraria/TileConverter.dll: $(wildcard Terraria/TileConverter/*.cs)
 out/Terraria/trsetup.exe: $(wildcard Terraria/TrSetup/*.cs)
 	@mkdir -p out/Terraria
 	@MONO_PATH=$(MONO_PATH) $(MONO) $(COMPILER) $@ $^ -- deps/Cecil/Mono.Cecil.dll $(COMMON_DEPS)
+
+# Terraria.exe's other patches are built with Terraria.TileRecords.mm.dll as a reference: a patch whose runtime reads tiles
+# uses its TrPatches.Tiles (MonoMod relinks the reference into Terraria.exe as it weaves both)
+TILE_USERS := $(filter-out out/Terraria/Terraria.TileRecords.mm.dll,$(filter out/Terraria/Terraria.%,$(SRC:%.cs=out/%.dll)))
+$(TILE_USERS): out/Terraria/%.dll: Terraria/%.cs out/Terraria/TileConverter.dll out/Terraria/Terraria.TileRecords.mm.dll
+	@MONO_PATH=$(MONO_PATH) $(MONO) $(COMPILER) $@ $< -- $(DEPS) out/Terraria/Terraria.TileRecords.mm.dll $(COMMON_DEPS)
