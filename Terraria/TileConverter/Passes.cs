@@ -11,7 +11,10 @@ namespace TerrariaPatches.TileConvert
 	// adds its pass here; the first one also hooks Run, which runs them all by their order.
 	public static class Passes
 	{
-		public const int Lazy = 10, Pack = 20, View = 30, Tiles = 40, DrawCuts = 50, Scans = 60, Split = 90, Inits = 95;
+		// (the order portmaster-terraria's trpatch install runs them in; a pass not woven in is simply not there)
+		public const int Lazy = 10, Pack = 20, View = 30, Throttle = 32, Frames = 34, Bosses = 35, Tiles = 40, FramesPointers = 45,
+			DrawCuts = 50, Lights = 52, TileCache = 54, Ui = 55, Scans = 60, Rests = 62, Settles = 64, Quiet = 70, Jit = 72,
+			Split = 90, Inits = 95;
 
 		static readonly List<Tuple<int, string, Func<ModuleDefinition, int>>> passes = new List<Tuple<int, string, Func<ModuleDefinition, int>>>();
 
