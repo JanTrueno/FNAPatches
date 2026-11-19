@@ -7,9 +7,9 @@ using Mono.Cecil.Cil;
 
 namespace TerrariaPatches.TileConvert
 {
-// Work the game redoes every frame that a handheld cannot afford (TrPatches.Throttle has the reasons): the map's player heads
-// rendered every 6th frame, the game's debug frame statistics worked out only while something reads them, and the map's
-// section drawing after a world loads given 2 ms a frame instead of 5.
+// Work the game redoes every frame that a handheld cannot afford (TrPatches.Throttle has the reasons): the game's debug frame
+// statistics worked out only while something reads them; and two settings that are the game's own values unless asked for:
+// the map's player heads rendered every nth frame (TR_MAPHEADS_EVERY) and the map's section drawing budget (TR_MAP_BUDGET_MS).
 public static class ThrottlePass
 {
     static MethodReference Import(ModuleDefinition into, ModuleDefinition tr, string type, string method) =>
